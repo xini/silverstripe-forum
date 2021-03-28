@@ -221,7 +221,7 @@ class ForumMemberProfile extends Page_Controller
         }
 
         // create the new member
-        $member = Object::create('Member');
+        $member = SS_Object::create('Member');
         $form->saveInto($member);
 
         $member->write();
