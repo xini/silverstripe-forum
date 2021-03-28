@@ -883,9 +883,11 @@ class ForumHolder_Controller extends Page_Controller
             // just to get the version data..
             $available = ForumHolder::new_posts_available($this->ID, $data, null, null, $forumID, $threadID);
 
+            $posts = $this->getRecentPosts(50, $forumID, $threadID);
+
             // No information provided by the client, just return the last posts
             $rss = new RSSFeed(
-                $this->getRecentPosts(50, $forumID, $threadID),
+                ($posts ?: new ArrayList()),
                 $this->Link() . 'rss',
                 sprintf(_t('Forum.RSSFORUMPOSTSTO'), $this->Title),
                 "",
@@ -916,8 +918,9 @@ class ForumHolder_Controller extends Page_Controller
             }
             if ($available = ForumHolder::new_posts_available($this->ID, $data, $since, $etag, $forumID, $threadID)) {
                 HTTP::register_modification_timestamp($data['last_created']);
+                $posts = $this->getRecentPosts(50, $forumID, $threadID, $etag);
                 $rss = new RSSFeed(
-                    $this->getRecentPosts(50, $forumID, $threadID, $etag),
+                    ($posts ?: new ArrayList()),
                     $this->Link() . 'rss',
                     sprintf(_t('Forum.RSSFORUMPOSTSTO'), $this->Title),
                     "",
